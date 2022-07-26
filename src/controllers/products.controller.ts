@@ -1,4 +1,4 @@
-import { Controller, Get, Query, Param } from '@nestjs/common';
+import { Controller, Get, Query, Param, Post, Body } from '@nestjs/common';
 
 @Controller('products')
 export class ProductsController {
@@ -8,7 +8,10 @@ export class ProductsController {
     @Query('offset') offset = 0,
     @Query('brand') brand: string,
   ) {
-    return `producs limit=> ${limit} offset=> ${offset} brand=> ${brand}`;
+    // mejor forma de comunicar datos entre cliente y back-end
+    return {
+      message: `producs limit=> ${limit} offset=> ${offset} brand=> ${brand}`,
+    };
   }
 
   // Get Params no dinamica
@@ -21,7 +24,17 @@ export class ProductsController {
   // Get Params dinamicas /:id
 
   @Get(':productId')
-  getProduct(@Param('productId') productId: string) {
+  getOne(@Param('productId') productId: string) {
     return `product ${productId}`;
+  }
+
+  // create Post product
+
+  @Post()
+  create(@Body() payload: any) {
+    return {
+      message: 'accion de crear',
+      payload,
+    };
   }
 }

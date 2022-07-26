@@ -14,8 +14,12 @@ import {
 
 import { Response } from 'express';
 
+import { ProductsService } from '../services/products.service';
+
 @Controller('products')
 export class ProductsController {
+  constructor(private productsService: ProductsService) {}
+
   @Get()
   getProducts(
     @Query('limit') limit = 100,
@@ -23,9 +27,10 @@ export class ProductsController {
     @Query('brand') brand: string,
   ) {
     // mejor forma de comunicar datos entre cliente y back-end
-    return {
-      message: `producs limit=> ${limit} offset=> ${offset} brand=> ${brand}`,
-    };
+    // return {
+    //   message: `producs limit=> ${limit} offset=> ${offset} brand=> ${brand}`,
+    // };
+    return this.productsService.findAll();
   }
 
   // Get Params no dinamica
@@ -40,31 +45,34 @@ export class ProductsController {
   @Get(':productId')
   // click derecho opcion Got to definition para aprender como funciona
   @HttpCode(HttpStatus.ACCEPTED)
-  getOne(@Res() response: Response, @Param('productId') productId: string) {
+  getOne(@Param('productId') productId: string) {
     // manejando express
-    response.status(200).send({
-      message: `product ${productId}`,
-    });
+    // response.status(200).send({
+    //   message: `product ${productId}`,
+    // });
+    return this.productsService.findOne(+productId); // con el simbolo +productId lo pase a tipo number
   }
 
   // create Post product
 
   @Post()
   create(@Body() payload: any) {
-    return {
-      message: 'accion de crear',
-      payload,
-    };
+    // return {
+    //   message: 'accion de crear',
+    //   payload,
+    // };
+    return this.productsService.create(payload);
   }
 
   // update product id and body
 
   @Put(':id')
-  update(@Param('id') id: number, @Body() payload: any) {
-    return {
-      id,
-      payload,
-    };
+  update(@Param('id') id: string, @Body() payload: any) {
+    // return {
+    //   id,
+    //   payload,
+    // };
+    return this.productsService.update(+id, payload);
   }
 
   // delete product id

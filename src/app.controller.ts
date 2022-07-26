@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -7,7 +7,7 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    return 'Hola mundo!';
+    return 'Hello World!';
   }
 
   @Get('nuevo')
@@ -18,5 +18,15 @@ export class AppController {
   @Get('/ruta/')
   nuevo() {
     return 'con /sas/';
+  }
+
+  @Get('products/:productId')
+  getProduct(@Param('productId') productId: string) {
+    return `product ${productId}`;
+  }
+
+  @Get('categories/:id/products/:productId')
+  getCategory(@Param('id') id: string, @Param('productId') productId: string) {
+    return `product ${id} and ${productId}`;
   }
 }
